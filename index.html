@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffe4e1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .birthday-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+        }
+
+        .title {
+            font-family: 'Pacifico', cursive;
+            font-size: 2.5rem;
+            color: #d23a6f;
+            margin-bottom: 1rem;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 2rem;
+        }
+
+        .cake-wrapper {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            margin-bottom: 2rem;
+        }
+
+        .cake {
+            position: relative;
+            width: 80%;
+            height: 180px;
+        }
+
+        .cake-base, .cake-middle, .cake-top {
+            position: absolute;
+            background-color: #fff;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .cake-base {
+            width: 100%;
+            height: 60px;
+            bottom: 0;
+            background-color: #f7d2e4;
+        }
+
+        .cake-middle {
+            width: 85%;
+            height: 60px;
+            bottom: 40px;
+            left: 7.5%;
+            background-color: #fce4ec;
+        }
+
+        .cake-top {
+            width: 70%;
+            height: 60px;
+            bottom: 80px;
+            left: 15%;
+            background-color: #fbe6e6;
+        }
+
+        .icing {
+            position: absolute;
+            height: 20px;
+            width: 100%;
+            background-color: #f0cce9;
+            border-radius: 10px 10px 0 0;
+            top: -18px;
+            z-index: 1;
+        }
+
+        .icing-drip {
+            position: absolute;
+            width: 10px;
+            height: 20px;
+            background-color: #f0cce9;
+            border-radius: 0 0 5px 5px;
+            z-index: 1;
+        }
+        .icing-drip:nth-child(1) { left: 10%; }
+        .icing-drip:nth-child(2) { left: 30%; }
+        .icing-drip:nth-child(3) { left: 50%; }
+        .icing-drip:nth-child(4) { left: 70%; }
+        .icing-drip:nth-child(5) { left: 90%; }
+
+
+        .candles {
+            position: absolute;
+            bottom: 120px;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .candle {
+            width: 10px;
+            height: 40px;
+            background-color: #ffa500;
+            border-radius: 5px;
+            position: relative;
+            transform-origin: bottom;
+            transition: transform 0.5s ease-in-out;
+        }
+        .candle:nth-child(1) { transform: rotate(-5deg); }
+        .candle:nth-child(2) { background-color: #ff6347; transform: rotate(5deg); }
+        .candle:nth-child(3) { background-color: #ffdb58; transform: rotate(-2deg); }
+
+        /* The wick and flame are now hidden by default */
+        .wick {
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 8px;
+            background-color: #333;
+            border-radius: 1px;
+            display: none; /* Hidden by default */
+        }
+        
+        .flame, .flame-core {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 15px;
+            height: 25px;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            opacity: 0; /* Hidden by default */
+            transition: opacity 0.5s ease-in-out;
+        }
+        
+        .flame-core {
+            top: 5px;
+            width: 8px;
+            height: 15px;
+        }
+
+        /* These styles will only apply when the 'lit' class is added to the candles container */
+        .candles.lit .flame {
+            opacity: 1;
+            background-color: #ffa500;
+            box-shadow: 0 0 10px 2px #ff6347;
+            animation: flicker 0.5s infinite alternate;
+        }
+
+        .candles.lit .flame-core {
+            opacity: 1;
+            background-color: #ffecb3;
+            box-shadow: 0 0 8px 1px #fff;
+        }
+
+        .candles.lit .wick {
+            display: block;
+        }
+
+        @keyframes flicker {
+            0% { transform: scale(1.0) translateX(-50%); opacity: 1; }
+            25% { transform: scale(1.02) translateX(-50%); opacity: 0.95; }
+            50% { transform: scale(1.05) translateX(-50%); opacity: 0.9; }
+            75% { transform: scale(1.02) translateX(-50%); opacity: 0.95; }
+            100% { transform: scale(1.0) translateX(-50%); opacity: 1; }
+        }
+
+        /* Smoke effect styles and animation */
+        .smoke-puff {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: rgba(189, 189, 189, 0.5);
+            border-radius: 50%;
+            z-index: 50;
+            animation: riseAndFade 1.5s ease-out forwards;
+            filter: blur(2px);
+            pointer-events: none;
+        }
+        .extinguish-smoke {
+            width: 30px;
+            height: 30px;
+            background-color: rgba(189, 189, 189, 0.7);
+            animation: riseAndFade 2s ease-out forwards;
+            filter: blur(3px);
+        }
+
+        @keyframes riseAndFade {
+            0% {
+                transform: translate(-50%, 0) scale(0.5);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(-50%, -50px) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .message-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            z-index: 100;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div id="app" class="birthday-container">
+        <h1 class="title">Happy Birthday!</h1>
+        <p id="subtext" class="subtitle">Click the button below to light the candles and make a wish.</p>
+
+        <div class="cake-wrapper">
+            <div class="cake">
+                <div class="cake-base">
+                    <div class="icing">
+                        <div class="icing-drip"></div>
+                        <div class="icing-drip"></div>
+                        <div class="icing-drip"></div>
+                        <div class="icing-drip"></div>
+                        <div class="icing-drip"></div>
+                    </div>
+                </div>
+                <div class="cake-middle"></div>
+                <div class="cake-top"></div>
+                <div class="candles">
+                    <div class="candle">
+                        <div class="wick"></div>
+                        <div class="flame" id="flame1"></div>
+                        <div class="flame-core" id="core1"></div>
+                    </div>
+                    <div class="candle">
+                        <div class="wick"></div>
+                        <div class="flame" id="flame2"></div>
+                        <div class="flame-core" id="core2"></div>
+                    </div>
+                    <div class="candle">
+                        <div class="wick"></div>
+                        <div class="flame" id="flame3"></div>
+                        <div class="flame-core" id="core3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button id="actionButton" class="bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-6 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-pink-300">
+            Light the Candles
+        </button>
+        <button id="resetButton" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-3 px-6 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300 hidden mt-4">
+            Start Over
+        </button>
+    </div>
+
+    <!-- Message box for user feedback -->
+    <div id="messageBox" class="message-box hidden">
+        <p id="messageText" class="text-xl font-bold mb-4"></p>
+        <button id="closeButton" class="bg-pink-500 text-white py-2 px-4 rounded-full">Close</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const actionButton = document.getElementById('actionButton');
+            const resetButton = document.getElementById('resetButton');
+            const candlesContainer = document.querySelector('.candles');
+            const messageBox = document.getElementById('messageBox');
+            const messageText = document.getElementById('messageText');
+            const closeButton = document.getElementById('closeButton');
+            const subtext = document.getElementById('subtext');
+
+            let audioContext;
+            let analyser;
+            let stream;
+            let audioLoop;
+            let isLit = false;
+
+            // Function to create a smoke effect
+            const createSmokeEffect = (isExtinguish = false) => {
+                const candles = document.querySelectorAll('.candle');
+                candles.forEach(candle => {
+                    const smokePuff = document.createElement('div');
+                    smokePuff.classList.add('smoke-puff');
+                    if (isExtinguish) {
+                        smokePuff.classList.add('extinguish-smoke');
+                    }
+                    // Position the smoke above the candle
+                    const candleRect = candle.getBoundingClientRect();
+                    const cakeRect = document.querySelector('.cake').getBoundingClientRect();
+                    smokePuff.style.left = `${(candleRect.left + candleRect.width / 2) - cakeRect.left}px`;
+                    smokePuff.style.bottom = `${cakeRect.height - (candleRect.top - cakeRect.top) + candleRect.height}px`;
+
+                    document.querySelector('.cake').appendChild(smokePuff);
+
+                    // Remove the smoke element after the animation is done
+                    setTimeout(() => {
+                        smokePuff.remove();
+                    }, isExtinguish ? 2000 : 1500);
+                });
+            };
+
+            // Function to show a custom message box
+            const showMessage = (message) => {
+                messageText.textContent = message;
+                messageBox.classList.remove('hidden');
+            };
+
+            const hideMessage = () => {
+                messageBox.classList.add('hidden');
+            };
+
+            closeButton.addEventListener('click', hideMessage);
+
+            // Function to light the candles and start listening
+            const lightCandles = async () => {
+                if (isLit) return;
+
+                // Add the 'lit' class to the candles container to show the fire
+                candlesContainer.classList.add('lit');
+                isLit = true;
+
+                // Create a small smoke puff when lighting the candles
+                createSmokeEffect(false);
+
+                actionButton.textContent = 'Blow to Extinguish!';
+                subtext.textContent = 'Make a wish and blow into your microphone!';
+
+                try {
+                    // Request microphone access
+                    stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    analyser = audioContext.createAnalyser();
+                    const source = audioContext.createMediaStreamSource(stream);
+                    source.connect(analyser);
+
+                    analyser.fftSize = 256;
+                    const bufferLength = analyser.frequencyBinCount;
+                    const dataArray = new Uint8Array(bufferLength);
+
+                    // Start the audio processing loop
+                    audioLoop = setInterval(() => {
+                        analyser.getByteFrequencyData(dataArray);
+                        let sum = dataArray.reduce((acc, val) => acc + val, 0);
+                        let average = sum / bufferLength;
+
+                        // Lowering the threshold to make it easier to detect a "blow"
+                        if (average > 50) {
+                            extinguishCandles();
+                        }
+                    }, 100);
+
+                } catch (err) {
+                    console.error('Microphone access denied:', err);
+                    showMessage('Microphone access is required to blow out the candles. Please reload the page and allow access.');
+                    // Revert UI state if access is denied
+                    candlesContainer.classList.remove('lit');
+                    isLit = false;
+                    actionButton.textContent = 'Light the Candles';
+                    subtext.textContent = 'Make a wish and click the button.';
+                }
+            };
+
+            // Function to extinguish the candles and stop listening
+            const extinguishCandles = () => {
+                clearInterval(audioLoop);
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                }
+                if (audioContext) {
+                    audioContext.close();
+                }
+
+                // Create a larger smoke puff when extinguishing the candles
+                createSmokeEffect(true);
+                
+                // Remove the 'lit' class to hide the fire and glow
+                candlesContainer.classList.remove('lit');
+
+                actionButton.classList.add('hidden');
+                resetButton.classList.remove('hidden');
+                subtext.textContent = 'Happy Birthday! Make a wish!';
+            };
+
+            // Function to reset the app
+            const resetApp = () => {
+                resetButton.classList.add('hidden');
+                actionButton.classList.remove('hidden');
+                actionButton.textContent = 'Light the Candles';
+                subtext.textContent = 'Click the button below to light the candles and make a wish.';
+                isLit = false;
+
+                // Remove any lingering smoke elements just in case
+                const smokePuffs = document.querySelectorAll('.smoke-puff');
+                smokePuffs.forEach(puff => puff.remove());
+            };
+
+            actionButton.addEventListener('click', lightCandles);
+            resetButton.addEventListener('click', resetApp);
+        });
+    </script>
+</body>
+</html>
